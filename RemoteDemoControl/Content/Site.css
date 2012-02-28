@@ -95,13 +95,13 @@ header h1, #header h1 {
     margin: 0;
     color: #fff;
     border: none;
-    line-height: 2em;
-    font-size: 32px !important;
+    line-height: 1em;
+    font-size: 24px !important;
     text-shadow: 1px 1px 2px #111;
 }
 
 #main {
-    padding: 30px 30px 15px 30px;
+    padding: 5px 5px 5px 10px;
     background-color: #fff;
     border-radius: 4px 0 0 0;
     -webkit-border-radius: 4px 0 0 0;
@@ -207,7 +207,7 @@ select {
 }
 
 input[type="submit"] {
-    font-size: 1.2em;
+    font-size: 1.5em;
     padding: 5px;
 }
 
@@ -241,10 +241,12 @@ table th {
     color: Red;
 }
 
+/*
 nav, 
 #menucontainer {
     margin-top: 40px;
 }
+*/
 
 div#title {
     display: block;

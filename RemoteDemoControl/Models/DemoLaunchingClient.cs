@@ -15,7 +15,7 @@ namespace RemoteDemoControl.Models
             LaunchRemoteProcess("start.ahk");
         }
 
-        private void LaunchRemoteProcess(string processFileName)
+        public void LaunchRemoteProcess(string processFileName)
         {
             NamedPipeClientStream pipeClient =
                 new NamedPipeClientStream(".", "testpipe",
@@ -44,7 +44,7 @@ namespace RemoteDemoControl.Models
             pipeClient.Close();
         }
 
-        internal void StopDemo()
+        public void StopDemo()
         {
             LaunchRemoteProcess("stop.ahk");
         }

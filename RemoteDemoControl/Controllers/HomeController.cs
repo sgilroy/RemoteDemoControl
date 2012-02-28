@@ -37,5 +37,21 @@ namespace RemoteDemoControl.Controllers
             client.StopDemo();
             return View("Index");
         }
+
+        public ActionResult FloorFlock()
+        {
+            ViewBag.Message = "Starting Floor Flock demo...";
+            DemoLaunchingClient client = new DemoLaunchingClient();
+            client.LaunchRemoteProcess("Demos\\FloorFlock.ahk");
+            return View("Index");
+        }
+
+        public ActionResult AtriumFloorPlay()
+        {
+            ViewBag.Message = "Starting Atrium Floor Play demo...";
+            DemoLaunchingClient client = new DemoLaunchingClient();
+            client.LaunchRemoteProcess("Demos\\AtriumFloorPlay.ahk");
+            return View("Index");
+        }
     }
 }
