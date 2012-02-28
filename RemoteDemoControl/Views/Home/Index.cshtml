@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "Remote Demo Control";
+}
+
+<h2>@ViewBag.Message</h2>
+@Html.ActionLink("About", "About", "Home")
+
+@using (Html.BeginForm("StartDemo", "Home"))
+{
+    <input type="submit" value="Start Demo" />
+}
+@using (Html.BeginForm("StopDemo", "Home"))
+{
+    <input type="submit" value="Stop Demo" />
+}
+<p>
+    This is a website for remotely controlling demos running on the server.
+</p>
