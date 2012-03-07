@@ -1,0 +1,16 @@
+﻿@{
+    ViewBag.Title = "Demos";
+}
+
+<h2>@ViewBag.Message</h2>
+@using (Html.BeginForm("Index", "Demos"))
+{
+    RemoteDemoControl.Models.DemosModel demosModel = new RemoteDemoControl.Models.DemosModel();
+    foreach (string fileName in demosModel.DemoFileNames)
+    {
+        <p><input name="button" type="submit" value="@fileName" /></p>
+    }
+}
+<p>
+    Use one of the buttons above to switch to a different demo.
+</p>

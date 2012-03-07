@@ -10,20 +10,28 @@ namespace RemoteDemoControl.Models
 {
     public class DemoLaunchingClient
     {
-        public void StartDemo()
+        public string StartDemo()
         {
-            LaunchRemoteProcess("start.ahk");
+            return LaunchRemoteProcess("start.ahk");
         }
 
-        public void LaunchRemoteProcess(string processFileName)
+        public string LaunchRemoteProcess(string processFileName)
         {
             NamedPipeClientStream pipeClient =
                 new NamedPipeClientStream(".", "testpipe",
                     PipeDirection.InOut, PipeOptions.None,
                     TokenImpersonationLevel.Impersonation);
 
-            Console.WriteLine("Connecting to server...\n");
-            pipeClient.Connect(100);
+            string message = null;
+            // Connecting to server...
+            try
+            {
+                pipeClient.Connect(100);
+            }
+            catch (TimeoutException)
+            {
+                return "Failed to connect to demo launcher. Please make sure DemoLauncher is running on this machine.";
+            }
 
             StreamString ss = new StreamString(pipeClient);
             // Validate the server's signature string
@@ -34,19 +42,19 @@ namespace RemoteDemoControl.Models
                 // by the server.
                 ss.WriteString(processFileName);
 
-                // Print the file to the screen.
-                Console.Write(ss.ReadString());
+                message = ss.ReadString();
             }
             else
             {
-                Console.WriteLine("Server could not be verified.");
+                message = "Demo launcher could not be verified. Please make sure the correct version of DemoLauncher is running on this machine.";
             }
             pipeClient.Close();
+            return message;
         }
 
-        public void StopDemo()
+        public string StopDemo()
         {
-            LaunchRemoteProcess("stop.ahk");
+            return LaunchRemoteProcess("stop.ahk");
         }
     }
 

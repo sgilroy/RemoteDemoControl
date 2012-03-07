@@ -11,14 +11,17 @@
 {
     <input type="submit" value="Stop Demo" />
 }
-@using (Html.BeginForm("FloorFlock", "Home"))
-{
-    <input type="submit" value="Floor Flock" />
-}
-@using (Html.BeginForm("AtriumFloorPlay", "Home"))
-{
-    <input type="submit" value="Atrium Floor Play" />
-}
-<p>
+<p/>
+<div>
     This is a website for remotely controlling demos running on the server.
-</p>
+    If the system is on and configured correctly, the start command should
+        <ul>
+            <li>turn on the projectors and set the input mode correctly</li>
+            <li>set the display mode to enable the projectors as the primary display</li>
+            <li>move any open windows to the secondary display (the monitor instead of the projectors)</li>
+            <li>turn on ScalableDesktop to merge the projectors into a single image</li>
+            <li>start one of the demos</li>
+            <li>move the mouse cursor off the projectors to the secondary display</li>
+        </ul>
+    The stop command should reverse this process.
+</div>

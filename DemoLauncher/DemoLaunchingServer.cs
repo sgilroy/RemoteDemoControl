@@ -76,25 +76,32 @@ namespace DemoLauncher
                 // Read in the contents of the file while impersonating the client.
                 //ReadFileToStream fileReader = new ReadFileToStream(ss, filename);
 
-                // Display the name of the user we are impersonating.
-                Console.WriteLine("Launching script: {0} on thread[{1}] as user: {2}.",
-                    filename, threadId, pipeServer.GetImpersonationUserName());
+                if (WorkstationLockedUtil.IsWorkstationLocked())
+                {
+                    ss.WriteString("Workstation is locked. Scripts can not be run.");
+                }
+                else
+                {
+                    // Display the name of the user we are impersonating.
+                    Console.WriteLine("Launching script: {0} on thread[{1}] as user: {2}.",
+                        filename, threadId, pipeServer.GetImpersonationUserName());
 
-                // Launch the specified script
+                    // Launch the specified script
 
-                System.Diagnostics.Process proc = new System.Diagnostics.Process();
+                    System.Diagnostics.Process proc = new System.Diagnostics.Process();
 
-                proc.StartInfo.UseShellExecute = false;
-                //proc.StartInfo.FileName = "C:\\Program Files (x86)\\AutoHotkey\\AutoHotkey.exe";
-                //proc.StartInfo.Arguments = "C:\\Users\\ml\\Documents\\AutoBodyHot\\" + filename;
-                //proc.StartInfo.Arguments = filename;
-                //proc.StartInfo.FileName = filename;
-                //proc.Start();
+                    proc.StartInfo.UseShellExecute = false;
 
-                Process.Start(filename);
-
-//                pipeServer.RunAsClient(fileReader.Start);
-                ss.WriteString("Process started " + filename);
+                    if (File.Exists(filename))
+                    {
+                        Process.Start(filename);
+                        ss.WriteString("Process started: " + filename);
+                    }
+                    else
+                    {
+                        ss.WriteString("File does not exist: " + filename);
+                    }
+                }
             }
             // Catch the IOException that is raised if the pipe is broken
             // or disconnected.
