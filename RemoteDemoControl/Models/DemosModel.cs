@@ -17,7 +17,7 @@ namespace RemoteDemoControl.Models
                 //foreach(System.IO.FileInfo fileInfo in 
                 // Specify the directories you want to manipulate.
                 //string path = @"C:\Users\ml\Documents\AutoBodyHot\Demos";
-                string path = @"\\soundbodies\C$\Users\ml\Documents\AutoBodyHot\Demos";
+                string path = @"\\interplay\C$\Users\ml\Documents\AutoBodyHot\Demos";
                 DirectoryInfo directory = new DirectoryInfo(path);
 
                 try 

@@ -5,6 +5,7 @@ using System.Text;
 using System.Security.Principal;
 using System.Diagnostics;
 using System.Threading;
+using RemoteDemoControlLib;
 
 namespace RemoteDemoControl.Models
 {
@@ -18,7 +19,7 @@ namespace RemoteDemoControl.Models
         public string LaunchRemoteProcess(string processFileName)
         {
             NamedPipeClientStream pipeClient =
-                new NamedPipeClientStream(".", "testpipe",
+                new NamedPipeClientStream(".", RemoteDemoControlPipe.PIPE_NAME,
                     PipeDirection.InOut, PipeOptions.None,
                     TokenImpersonationLevel.Impersonation);
 
@@ -35,7 +36,7 @@ namespace RemoteDemoControl.Models
 
             StreamString ss = new StreamString(pipeClient);
             // Validate the server's signature string
-            if (ss.ReadString() == "I am the one true server!")
+            if (ss.ReadString() == RemoteDemoControlPipe.PIPE_SIGNATURE)
             {
                 // The client security token is sent with the first write.
                 // Send the name of the file whose contents are returned

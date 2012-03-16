@@ -70,6 +70,7 @@
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\DemoLaunchingClient.cs" />
     <Compile Include="Models\DemosModel.cs" />
+    <Compile Include="Models\SystemStateModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -149,6 +150,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Demos\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RemoteDemoControlLib\RemoteDemoControlLib.csproj">
+      <Project>{071552AA-F92F-4F50-B006-F31F4B88BB03}</Project>
+      <Name>RemoteDemoControlLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

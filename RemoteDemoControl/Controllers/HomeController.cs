@@ -12,7 +12,7 @@ namespace RemoteDemoControl.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Message = "Demo state unknown.";
+            ViewBag.Message = SystemStateModel.GetSystemState();
 
             return View();
         }
@@ -24,15 +24,21 @@ namespace RemoteDemoControl.Controllers
 
         public ActionResult StartDemo()
         {
-            DemoLaunchingClient client = new DemoLaunchingClient();
-            ViewBag.Message = client.StartDemo();
+            if (Request.HttpMethod == "POST")
+            {
+                DemoLaunchingClient client = new DemoLaunchingClient();
+                ViewBag.Message = client.StartDemo();
+            }
             return View("Index");
         }
 
         public ActionResult StopDemo()
         {
-            DemoLaunchingClient client = new DemoLaunchingClient();
-            ViewBag.Message = client.StopDemo();
+            if (Request.HttpMethod == "POST")
+            {
+                DemoLaunchingClient client = new DemoLaunchingClient();
+                ViewBag.Message = client.StopDemo();
+            }
             return View("Index");
         }
 

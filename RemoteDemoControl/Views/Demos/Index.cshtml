@@ -1,14 +1,15 @@
 ﻿@{
-    ViewBag.Title = "Demos";
+    ViewBag.Title = "InterPlay Remote Control - Demos";
 }
 
-<h2>@ViewBag.Message</h2>
+<h2>Demos</h2>
+<h3>@ViewBag.Message</h3>
 @using (Html.BeginForm("Index", "Demos"))
 {
     RemoteDemoControl.Models.DemosModel demosModel = new RemoteDemoControl.Models.DemosModel();
     foreach (string fileName in demosModel.DemoFileNames)
     {
-        <p><input name="button" type="submit" value="@fileName" /></p>
+        <div><input name="button" type="submit" value="@fileName" /></div>
     }
 }
 <p>

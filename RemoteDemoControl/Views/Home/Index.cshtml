@@ -1,19 +1,20 @@
 ﻿@{
-    ViewBag.Title = "Remote Demo Control";
+    ViewBag.Title = "InterPlay Remote Control - Home";
 }
 
-<h2>@ViewBag.Message</h2>
+<h2>Home</h2>
+<h3>@ViewBag.Message</h3>
 @using (Html.BeginForm("StartDemo", "Home"))
 {
-    <input type="submit" value="Start Demo" />
+    <input type="submit" value="Start System" />
 }
 @using (Html.BeginForm("StopDemo", "Home"))
 {
-    <input type="submit" value="Stop Demo" />
+    <input type="submit" value="Stop System" />
 }
 <p/>
 <div>
-    This is a website for remotely controlling demos running on the server.
+    This is a website for remotely controlling demos running on the InterPlay server.
     If the system is on and configured correctly, the start command should
         <ul>
             <li>turn on the projectors and set the input mode correctly</li>

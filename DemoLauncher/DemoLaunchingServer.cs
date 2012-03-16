@@ -6,6 +6,7 @@ using System.Threading;
 using System.IO.Pipes;
 using System.IO;
 using System.Diagnostics;
+using RemoteDemoControlLib;
 
 namespace DemoLauncher
 {
@@ -50,7 +51,7 @@ namespace DemoLauncher
         private static void ServerThread(object data)
         {
             NamedPipeServerStream pipeServer =
-                new NamedPipeServerStream("testpipe", PipeDirection.InOut, numThreads);
+                new NamedPipeServerStream(RemoteDemoControlPipe.PIPE_NAME, PipeDirection.InOut, numThreads);
 
             int threadId = Thread.CurrentThread.ManagedThreadId;
 
@@ -70,11 +71,8 @@ namespace DemoLauncher
                 // Verify our identity to the connected client using a
                 // string that the client anticipates.
 
-                ss.WriteString("I am the one true server!");
+                ss.WriteString(RemoteDemoControlPipe.PIPE_SIGNATURE);
                 string filename = ss.ReadString();
-
-                // Read in the contents of the file while impersonating the client.
-                //ReadFileToStream fileReader = new ReadFileToStream(ss, filename);
 
                 if (WorkstationLockedUtil.IsWorkstationLocked())
                 {
@@ -87,7 +85,6 @@ namespace DemoLauncher
                         filename, threadId, pipeServer.GetImpersonationUserName());
 
                     // Launch the specified script
-
                     System.Diagnostics.Process proc = new System.Diagnostics.Process();
 
                     proc.StartInfo.UseShellExecute = false;
