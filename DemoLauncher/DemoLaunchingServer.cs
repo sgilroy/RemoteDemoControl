@@ -7,6 +7,8 @@ using System.IO.Pipes;
 using System.IO;
 using System.Diagnostics;
 using RemoteDemoControlLib;
+using System.Security.AccessControl;
+using System.Security.Principal;
 
 namespace DemoLauncher
 {
@@ -50,63 +52,68 @@ namespace DemoLauncher
 
         private static void ServerThread(object data)
         {
-            NamedPipeServerStream pipeServer =
-                new NamedPipeServerStream(RemoteDemoControlPipe.PIPE_NAME, PipeDirection.InOut, numThreads);
-
-            int threadId = Thread.CurrentThread.ManagedThreadId;
-
-            Console.WriteLine("Created thread[{0}].", threadId);
-
-            // Wait for a client to connect
-            pipeServer.WaitForConnection();
-
-            Console.WriteLine("Client connected on thread[{0}].", threadId);
-            try
+            PipeSecurity ps = new PipeSecurity();
+            ps.AddAccessRule(new PipeAccessRule("IIS_IUSRS", PipeAccessRights.ReadWrite, AccessControlType.Allow));
+            ps.AddAccessRule(new PipeAccessRule(WindowsIdentity.GetCurrent().Owner, PipeAccessRights.FullControl, AccessControlType.Allow));
+            using (NamedPipeServerStream pipeServer =
+                new NamedPipeServerStream(RemoteDemoControlPipe.PIPE_NAME, PipeDirection.InOut, numThreads, PipeTransmissionMode.Message, PipeOptions.WriteThrough, 1024, 1024, ps))
             {
-                // Read the request from the client. Once the client has
-                // written to the pipe its security token will be available.
 
-                StreamString ss = new StreamString(pipeServer);
+                int threadId = Thread.CurrentThread.ManagedThreadId;
 
-                // Verify our identity to the connected client using a
-                // string that the client anticipates.
+                Console.WriteLine("Created thread[{0}].", threadId);
 
-                ss.WriteString(RemoteDemoControlPipe.PIPE_SIGNATURE);
-                string filename = ss.ReadString();
+                // Wait for a client to connect
+                pipeServer.WaitForConnection();
 
-                if (WorkstationLockedUtil.IsWorkstationLocked())
+                Console.WriteLine("Client connected on thread[{0}].", threadId);
+                try
                 {
-                    ss.WriteString("Workstation is locked. Scripts can not be run.");
-                }
-                else
-                {
-                    // Display the name of the user we are impersonating.
-                    Console.WriteLine("Launching script: {0} on thread[{1}] as user: {2}.",
-                        filename, threadId, pipeServer.GetImpersonationUserName());
+                    // Read the request from the client. Once the client has
+                    // written to the pipe its security token will be available.
 
-                    // Launch the specified script
-                    System.Diagnostics.Process proc = new System.Diagnostics.Process();
+                    StreamString ss = new StreamString(pipeServer);
 
-                    proc.StartInfo.UseShellExecute = false;
+                    // Verify our identity to the connected client using a
+                    // string that the client anticipates.
 
-                    if (File.Exists(filename))
+                    ss.WriteString(RemoteDemoControlPipe.PIPE_SIGNATURE);
+                    string filename = ss.ReadString();
+
+                    if (WorkstationLockedUtil.IsWorkstationLocked())
                     {
-                        Process.Start(filename);
-                        ss.WriteString("Process started: " + filename);
+                        ss.WriteString("Workstation is locked. Scripts can not be run.");
                     }
                     else
                     {
-                        ss.WriteString("File does not exist: " + filename);
+                        // Display the name of the user we are impersonating.
+                        Console.WriteLine("Launching script: {0} on thread[{1}] as user: {2}.",
+                            filename, threadId, pipeServer.GetImpersonationUserName());
+
+                        // Launch the specified script
+                        System.Diagnostics.Process proc = new System.Diagnostics.Process();
+
+                        proc.StartInfo.UseShellExecute = false;
+
+                        if (File.Exists(filename))
+                        {
+                            Process.Start(filename);
+                            ss.WriteString("Process started: " + filename);
+                        }
+                        else
+                        {
+                            ss.WriteString("File does not exist: " + filename);
+                        }
                     }
                 }
+                // Catch the IOException that is raised if the pipe is broken
+                // or disconnected.
+                catch (IOException e)
+                {
+                    Console.WriteLine("ERROR: {0}", e.Message);
+                }
+                pipeServer.Close();
             }
-            // Catch the IOException that is raised if the pipe is broken
-            // or disconnected.
-            catch (IOException e)
-            {
-                Console.WriteLine("ERROR: {0}", e.Message);
-            }
-            pipeServer.Close();
         }
     }
 

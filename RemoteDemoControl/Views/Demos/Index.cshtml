@@ -4,12 +4,30 @@
 
 <h2>Demos</h2>
 <h3>@ViewBag.Message</h3>
-@using (Html.BeginForm("Index", "Demos"))
-{
-    RemoteDemoControl.Models.DemosModel demosModel = new RemoteDemoControl.Models.DemosModel();
-    foreach (string fileName in demosModel.DemoFileNames)
+    
+@{
+    RemoteDemoControl.Models.DemosModel demosModel = new RemoteDemoControl.Models.DemosModel(Server);
+    foreach (RemoteDemoControl.InterPlayDemo demo in demosModel.Demos)
     {
-        <div><input name="button" type="submit" value="@fileName" /></div>
+    <hr size="1" noshade="noshade" style="width:100%;height:1px;margin:0px 0;padding:0;color:#000;background:#000;border:none;"/>
+    <div id="demoContainerDiv" class="demoContainer">
+        @using (Html.BeginForm("Index", "Demos"))
+        {
+            <button type="submit" class="demoSubmitButton">
+                <input type="hidden" name="demoScriptFileName" value="@demo.LaunchScriptFile" />
+                <div id="demoButtonContentDiv" class="demoButtonContent">
+                    <div id="thumbnailDiv" class="demoThumbnail">
+                        <img src="@demo.ThumbnailUrl" alt="Thumbnail for @demo.Title" height="100" width="100"/>
+                    </div>
+                    <div>
+                        <h2 class="demoTitle">@demo.Title</h2>
+                        <div class="demoDescription">@demo.Description</div>
+                    </div>
+                    @*<input id="@demo.LaunchScriptFile" name="button" type="submit" style="visibility:hidden; height:0px" value="@demo.LaunchScriptFile" />*@
+                </div>
+            </button>
+        }
+    </div>
     }
 }
 <p>
