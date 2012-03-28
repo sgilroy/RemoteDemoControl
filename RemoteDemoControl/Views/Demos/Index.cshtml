@@ -13,8 +13,8 @@
     <div id="demoContainerDiv" class="demoContainer">
         @using (Html.BeginForm("Index", "Demos"))
         {
+            <input type="hidden" name="demoScriptFileName" value="@demo.LaunchScriptFile" />
             <button type="submit" class="demoSubmitButton">
-                <input type="hidden" name="demoScriptFileName" value="@demo.LaunchScriptFile" />
                 <div id="demoButtonContentDiv" class="demoButtonContent">
                     <div id="thumbnailDiv" class="demoThumbnail">
                         <img src="@demo.ThumbnailUrl" alt="Thumbnail for @demo.Title" height="100" width="100"/>
